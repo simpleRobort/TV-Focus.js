@@ -28,12 +28,16 @@ FOCUS.prototype = {
         if (i == -1) return
         // 移除旧焦点
         var fDom = document.getElementById(my.domIdName + my.focusId)
-        if (fDom != null) fDom.classList.remove(my.focusClass)
+        if (fDom != null) {
+            fDom.classList.remove(my.focusClass)
+            my.unfocusEvent(my.focusId)
+        }
         // 获得新焦点
         var NDom = document.getElementById(my.domIdName + i)
         if (NDom != null) {
             my.focusId = i
             NDom.classList.add(my.focusClass)
+            my.focusEvent(my.focusId)
         }
     },
     initEvent: function (model) {
@@ -55,6 +59,8 @@ FOCUS.prototype = {
         my.keyDefaultEvent = !model.event.keyDefaultEvent ? function () {}: model.event.keyDefaultEvent
         my.keyBackEvent = !model.event.keyBackEvent ? function () {}: model.event.keyBackEvent
         my.keyOkEvent = !model.event.keyOkEvent ? function () {}: model.event.keyOkEvent
+        my.focusEvent = !model.event.focusEvent ? function () {}: model.event.focusEvent
+        my.unfocusEvent = !model.event.focusEvent ? function () {}: model.event.unfocusEvent
         my.initMoveEvent(model)
     },
     initMoveEvent: function (model) {
