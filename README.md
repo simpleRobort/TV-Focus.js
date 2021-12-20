@@ -149,7 +149,7 @@ js:
 1.你需要这个元素按某一个方向键不切换焦点或者切换到自己想要的焦点（哪怕隔了一座山哈哈）
 2.你的ui设计稿非常的不规律（焦点默认的逻辑无法满足需求，焦点默认移动的逻辑是以dom的宽高位置发射一道射线，第一个触碰到的dom元素就会成为下一个焦点）
 
-![示例图片](https://simplerobort.github.io/TV-Focus.js/image/image/example/example01.png) 
+![示例图片](https://simplerobort.github.io/TV-Focus.js/image/example/example01.png) 
 
 显然没有别的元素的话，这个两个元素无法相互跳转，有人问我为什么不把判定范围改大一点，我也试过，自然是解决了，但是有更多的问题出现了，我这就不一一举例了哈哈，
 回到正题，使用方法很简单，只需要在new FOCUS传入的对象里新增一个属性focusMove即可
