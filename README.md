@@ -146,7 +146,9 @@ js:
 ##### [使用后代选择器示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo2.html)
 #### 2.使用强制焦点变换 (forceMove)
 适用的场景一般有两个：
+
 1.你需要这个元素按某一个方向键不切换焦点或者切换到自己想要的焦点（哪怕隔了一座山哈哈）
+
 2.你的ui设计稿非常的不规律（焦点默认的逻辑无法满足需求，焦点默认移动的逻辑是以dom的宽高位置发射一道射线，第一个触碰到的dom元素就会成为下一个焦点）
 
 ![示例图片](https://simplerobort.github.io/TV-Focus.js/image/example/example01.png) 
@@ -249,14 +251,14 @@ var vm = new FOCUS({ })
 ```
 传参为一个对象，其中对象内部的属性如下:
 
-|   属性名称  | 描述 |
-|:----:|:----:|
-|domIdName| 统一id,默认为"item",如希望统一id为 "focusDom0"，"focusDom1",即该参数值为 "focusDom" |
-|focusId| 需要首先聚焦的id，默认索引为0的元素  |
-|focusClass| 聚焦dom增加的class,默认为"focus"  |
-|pageState| 设置页面等级，详情参考II.4  |
-|forceMove| 修改dom的方向键逻辑，详情参考II.2  |
-|event| 按键处理事件,详情参考II.3  |
+|   属性名称  | 类型 | 描述 |
+|:----:|:----:|:----:|
+|domIdName| string |统一id,默认为"item",如希望统一id为 ("focusDom0"、"focusDom1"...),即该参数值为 "focusDom" |
+|focusId| string |需要首先聚焦的id，默认索引为0的元素  |
+|focusClass| string |聚焦dom增加的class,默认为"focus"  |
+|pageState| int|设置页面等级，详情参考II.4  |
+|forceMove|object| 修改dom的方向键逻辑，详情参考II.2  |
+|event| object|按键处理事件,详情参考II.3  |
 
 ## 其他
 我是来自宁波的00后，如果这个框架能够被很多使用到，我想我会非常的开心，如果你有什么觉得框架需要增加的好的建议，我很荣幸能够知道，这是我的联系方式，请表明来意
