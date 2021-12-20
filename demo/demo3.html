@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用强制焦点变换</title>
+    <style>
+        .focus {
+            border: 2px solid #0f0f0f; /*这里就是获取焦点的实现原理了，Focus.js会给获取焦点的元素添加一个名字叫做 focus 的class类*/
+        }
+    </style>
+</head>
+<body>
+<!--     保证元素拥有定位     -->
+<div class="dom" id="item0" style="position: absolute;left:200px;top:200px;width:150px;height:150px">这是第个0dom</div>
+<div class="dom" id="item1" style="position: absolute;left:400px;top:200px;width:150px;height:150px">这是第个1dom</div>
+<div class="dom" id="item2" style="position: absolute;left:600px;top:200px;width:150px;height:150px">这是第个2dom</div>
+<div class="dom" id="item3" style="position: absolute;left:200px;top:400px;width:150px;height:150px">这是第个3dom</div>
+<div class="dom" id="item4" style="position: absolute;left:400px;top:400px;width:150px;height:150px">这是第个4dom</div>
+<div class="dom" id="item5" style="position: absolute;left:600px;top:400px;width:150px;height:150px">这是第个5dom</div>
+<script src="../focus.js"></script>
+<script>
+    var vm = new FOCUS({
+        focusId: 'item3', // 页面首先获取焦点的dom元素的Id
+        forceMove: {
+            // id:[上，左，下，右] 参数  -1：随框架判断  -2：禁止移动  希望获得焦点的id：强制获得焦点
+            item0: [-1,-1,"item2",-1],
+            item2: ["item0",-1,-1,-1],
+            item5: [-1,-2,-1,"item4"],
+        },
+        event: {
+            keyOkEvent: function (focusId) {
+                console.log("点击了确认键，当前获得焦点的索引为：" + focusId)
+                switch (focusId) {
+                    case 0:
+
+                        break
+                }
+            },
+            keyBackEvent: function (focusId) {
+                console.log("点击了返回键，当前获得焦点的索引为：" + focusId)
+                switch (focusId) {
+                    case 6:
+                    case 7:
+
+                        break
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

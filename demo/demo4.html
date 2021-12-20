@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二级以上页面</title>
+    <style>
+        .focus {
+            border: 2px solid #0f0f0f; /*这里就是获取焦点的实现原理了，Focus.js会给获取焦点的元素添加一个名字叫做 focus 的class类*/
+        }
+    </style>
+</head>
+<body>
+<!--     保证元素拥有定位     -->
+<div class="dom" id="item0" style="position: absolute;left:200px;top:200px;width:150px;height:150px">一级页面第0个dom</div>
+<div class="dom" id="item1" style="position: absolute;left:400px;top:200px;width:150px;height:150px">一级页面第1个dom</div>
+<div class="dom" id="item2" style="position: absolute;left:600px;top:200px;width:150px;height:150px">一级页面第2个dom</div>
+<div class="dom" id="item3" style="position: absolute;left:200px;top:400px;width:150px;height:150px">二级页面第0个dom</div>
+<div class="dom" id="item4" style="position: absolute;left:400px;top:400px;width:150px;height:150px">二级页面第1个dom</div>
+<div class="dom" id="item5" style="position: absolute;left:200px;top:600px;width:150px;height:150px">三级页面第0个dom</div>
+<script src="../focus.js"></script>
+<script>
+    var vm = new FOCUS({
+        pageState: {
+            // 二级以上页面
+            item3: 2,
+            item4: 2,
+            item5: 3
+        },
+        event: {
+            keyOkEvent: function (focusId) {
+                console.log("点击了确认键，当前获得焦点的索引为：" + focusId)
+                switch (focusId) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        this.requireFocus(3)
+                        break
+                    case 3:
+                    case 4:
+                        this.requireFocus(5)
+                        break
+                }
+            },
+            keyBackEvent: function (focusId) {
+                console.log("点击了返回键，当前获得焦点的索引为：" + focusId)
+                switch (focusId) {
+                    case 3:
+                    case 4:
+                        this.requireFocus(2)
+                        break
+                    case 5:
+                        this.requireFocus(3)
+                }
+            }
+        }
+    })
+
+    alert("通过回车键进入上一级页面焦点，同时返回键返回下一级页面焦点")
+</script>
+</body>
+</html>

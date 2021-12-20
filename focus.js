@@ -212,7 +212,7 @@ FOCUS.prototype = {
                 case KEY_7:
                 case KEY_8:
                 case KEY_9:
-                    my.keyNumberEvent(e.keyCode - 48)
+                    my.keyNumberEvent(e.keyCode - 48, my.focusId)
                     break
                 case 1: /*ipannel*/
                 case KEY_UP:
