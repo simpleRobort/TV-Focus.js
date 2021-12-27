@@ -24,22 +24,6 @@ FOCUS.prototype = {
         // 初始化事件
         my.initEvent(model)
     },
-    requireFocus: function (i) {
-        if (i == -1) return
-        // 移除旧焦点
-        var fDom = document.getElementById(my.domIdName + my.focusId)
-        if (fDom != null) {
-            fDom.classList.remove(my.focusClass)
-            my.unfocusEvent(my.focusId)
-        }
-        // 获得新焦点
-        var NDom = document.getElementById(my.domIdName + i)
-        if (NDom != null) {
-            my.focusId = i
-            NDom.classList.add(my.focusClass)
-            my.focusEvent(my.focusId)
-        }
-    },
     initEvent: function (model) {
         if (!model.event) model.event = {}
         my.keyNumberEvent = !model.event.keyNumberEvent ? function () {}: model.event.keyNumberEvent
@@ -305,9 +289,6 @@ FOCUS.prototype = {
             }
         }
     },
-    getDom: function (index) {
-        return document.getElementById(my.domIdName + index)
-    },
     Mpush: function (dom, i, forceMove, pageState) {
         if (!my.M) my.M = []
         my.M.push({
@@ -320,5 +301,91 @@ FOCUS.prototype = {
             forceMove: !forceMove[my.domIdName + i] ? [-1,-1,-1,-1] : forceMove[my.domIdName + i],
             pageState: !pageState[my.domIdName + i] ? 1 : pageState[my.domIdName + i]
         })
+    },
+    getDom: function (index) {
+        return document.getElementById(my.domIdName + index)
+    },
+    requireFocus: function (i) {
+        if (i == -1) return
+        // 移除旧焦点
+        var fDom = document.getElementById(my.domIdName + my.focusId)
+        if (fDom != null) {
+            fDom.classList.remove(my.focusClass)
+            my.unfocusEvent(my.focusId)
+        }
+        // 获得新焦点
+        var NDom = document.getElementById(my.domIdName + i)
+        if (NDom != null) {
+            my.focusId = i
+            NDom.classList.add(my.focusClass)
+            my.focusEvent(my.focusId)
+        }
+    },
+    getFocus: function() {
+      return this.focusId
+    },
+    getFocusDom: function() {
+        return this.getDom(this.focusId)
+    },
+    log: function (msg, fontSize, TextColor, bgColor) {
+        var my = this;
+        if (!my.m) {
+            my.m = document.createElement("div");
+            my.m.id = "deBug";
+            my.page = document.body
+            my.page.appendChild(this.m);
+        }
+
+        TextColor = TextColor || "#fff"
+        bgColor = bgColor || "#000"
+        fontSize = fontSize || "12"
+        if (parseInt(fontSize) != NaN) {
+            fontSize = fontSize + 'px'
+        }
+        my.m.style.cssText = 'z-index:9999; font-size: ' + fontSize + '; position:absolute; top:10px; left:10px; width:1240px; height:auto; overflow:hidden; padding:10px; ' +
+            'background:' + bgColor + '; color:' + TextColor + ';word-break:break-all; display:block; filter:alpha(opacity=0.7);-moz-opacity: 0.7;-khtml-opacity: 0.7;opacity: 0.7;';
+
+        var obj_type = typeof msg;
+        switch (obj_type) {
+            default:
+                break;
+            case 'undefined':
+                fill("undefined");
+                break;
+            case 'boolean':
+                fill("(boolean):" + msg);
+                break;
+            case 'number':
+                fill("(number):" + msg);
+                break;
+            case 'string':
+                fill("(string):" + msg);
+                break;
+            case 'object':
+                if (msg === null) {
+                    fill("(object):null");
+                    break;
+                }
+                var text = [];
+                for (var ierror in msg) {
+                    if (msg.hasOwnProperty(ierror)) {
+                        var value = msg[ierror];
+                        text.push(String(ierror + ":" + "(" + (typeof value) + ")" + value));
+                    }
+                }
+                fill("(object)-> {" + text.join(", ") + "}");
+                break;
+        }
+
+        function fill(content) {
+            var target = document.getElementById("deBug");
+            var tempContent = target.innerHTML;
+            var date = new Date();
+            target.innerHTML = "<div id = 'copyright' style = 'font-size: 12px;color:#FFF;'><strong>"
+                + "CurrentTime :" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                + "</strong>" + "</div><div id ='debug_box'></div>";
+            var targetContent = document.getElementById('debug_box');
+            targetContent.innerHTML = content + "<br/>" + tempContent;
+        }
     }
 }

@@ -1,4 +1,4 @@
-TV端焦点处理框架 focus.js V1.0.1
+TV端焦点处理框架 focus.js V1.0.2
 ========================
 
 这个框架运用非常的简单，简单使用就3步，适用于用原生写TV端需求的前端，即使从来没开发过TV端的看完基本使用也可以掌握,非常好用！
@@ -28,8 +28,7 @@ TV端焦点处理框架 focus.js V1.0.1
 <script src="./focus.js"></script>
 ```
 
- #### 3.在引入之后创建一个script标签，new一个FOCUS对象并且传入参数
------------------------------
+#### 3.在引入之后创建一个script标签，new一个FOCUS对象并且传入参数
 ```javascript
 <script>
         var vm = new FOCUS({
@@ -218,35 +217,7 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
 同样也是在传入的对象里添加一个新的属性pageState,属性为一个对象，取值为 id：page，原理很简单，不同级别的焦点不会默认互相选中,只能通过提供的FOCUS下的requireFocus（参考第五条）切换焦点
 
 ##### [二级以上页面示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo4.html)
-#### 5.切换焦点 (requireFocus)
-这个在事件会被频繁使用,也是非常简单的api
-使用方法：
-```javascript
-        var vm = new FOCUS({
-            event: {
-                keyOkEvent: function (focusId) {
-                    console.log("点击了确认键，当前获得焦点的索引为：" + focusId)
-                    switch (focusId) {
-                        case 0:
-                            // 在更多精彩看这里按钮点击确认会进入二级页面
-                            this.requireFocus(6)
-                            break
-                    }
-                },
-                keyBackEvent: function (focusId) {
-                    console.log("点击了返回键，当前获得焦点的索引为：" + focusId)
-                    switch (focusId) {
-                        case 6:
-                        case 7:
-                            // 在二级页面点击返回认会进入回到第0个焦点也就是id为 item0 的元素
-                            this.requireFocus(0)
-                            break
-                    }
-                }
-            }
-        })
-```
-参数为索引（即id的最后一位数字）
+
 ## III new FOCUS传参
 ```javascript
 var vm = new FOCUS({ })
@@ -262,8 +233,42 @@ var vm = new FOCUS({ })
 |forceMove|object| 修改dom的方向键逻辑，详情参考II.2  |
 |event| object|按键处理事件,详情参考II.3  |
 
+## IV  框架的Api 
+
+使用方法：
+
+在实例内部使用: 示例：this.requireFocus(0)
+
+在实例外部使用: 示例：vm.requireFocus(0) (vm为实例对象)
+```javascript
+        var vm = new FOCUS({
+            event: {
+                keyOkEvent: function (focusId) {
+                    this.requireFocus(6) // 在实例内部使用
+                }
+            }
+        })
+        vm.requireFocus(6) // 在实例外部使用
+```
+
+|   Api名称  | 传参数量 |传参 | 描述 |
+|:----:|:----:|:----:|:----:|
+|requireFocus|1| number | 使元素获取焦点，传参为索引值,例(使id为"item2"的元素获取焦点)：this.requireFocus(2)|
+|log| 4(后三个参数可不传)|打印内容，字体大小(默认16px), 文字颜色(默认白色)，背景颜色(默认黑色) | tv端无控制台，所以需要此api显示打印信息  |
+|getDom| 1|int | 根据传参索引返回元素  |
+|getFocus|0| 无 | 返回当前焦点索引  |
+|getFocusDom|0| 无 | 返回当前焦点dom元素  |
+
+## V 版本日志
+
+|   版本号  | 更新内容 | 日期|
+|:----:|:----:|:----:|
+|1.0.2|添加打印调试api，以及readme.md排版更新，版本日志|2021-12-27|
+|1.0.1| 添加二级以上页面，失焦获焦事件|2021-12-21|
+|1.0.0| 具备tv端焦点框架基本需求|2021-12-20|
+
 ## 其他
-我是来自宁波的00后，如果这个框架能够被很多使用到，我想我会非常的开心，如果你有什么觉得框架需要增加的好的建议，我很荣幸能够知道，这是我的联系方式，请表明来意
+如果这个框架能够被很多使用到，我想我会非常的开心，如果你有什么觉得框架需要增加的好的建议，我很荣幸能够知道，这是我的联系方式，请表明来意,希望您能给我一个点赞，这是对我最大的鼓励
 
 vx:DoubleU-_
 
