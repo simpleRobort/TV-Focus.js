@@ -16,6 +16,12 @@ FOCUS.prototype = {
             i++
         }
         my.initFocusDom(model)
+
+        if (model.methods) {
+            for (var i in model.methods) {
+                this[i] = model.methods[i]
+            }
+        }
     },
     initFocusDom: function (model) {
         // 初始化焦点
@@ -387,5 +393,35 @@ FOCUS.prototype = {
             var targetContent = document.getElementById('debug_box');
             targetContent.innerHTML = content + "<br/>" + tempContent;
         }
+    },
+    getParam: function (param, defaults, url, isblur) {
+        url = url || window.location.href
+        defaults = defaults == 0?0:!defaults ? null: defaults
+        var params = (url.substr(url.indexOf("?") + 1)).split("&");
+        isblur = isblur || false;
+
+        if (params != null) {
+            if ( isblur ){
+                var param = param.toLowerCase();
+                for (var i = 0; i < params.length; i++) {
+                    var strs = params[i].split("=");
+                    if (strs[0].toLowerCase() == param) {
+                        return strs[1];
+                    }
+                }
+            } else {
+                for (var i = 0; i < params.length; i++) {
+                    var strs = params[i].split("=");
+                    if (strs[0] == param) {
+                        return strs[1];
+                    }
+                }
+            }
+
+        }
+        return defaults;
+    },
+    gotoPage: function (url) {/*页面跳转*/
+        window.location.href = url;
     }
 }

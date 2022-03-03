@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二级以上页面</title>
+    <style>
+        .focus {
+            border: 2px solid #0f0f0f; /*这里就是获取焦点的实现原理了，Focus.js会给获取焦点的元素添加一个名字叫做 focus 的class类*/
+        }
+    </style>
+</head>
+<body>
+<!--     保证元素拥有定位     -->
+<div class="dom" id="item0" style="position: absolute;left:200px;top:200px;width:150px;height:150px">第0个dom</div>
+<div class="dom" id="item1" style="position: absolute;left:400px;top:200px;width:150px;height:150px">第1个dom</div>
+<div class="dom" id="item2" style="position: absolute;left:600px;top:200px;width:150px;height:150px">第2个dom</div>
+<div class="dom" id="item3" style="position: absolute;left:200px;top:400px;width:150px;height:150px">第3个dom</div>
+<div class="dom" id="item4" style="position: absolute;left:400px;top:400px;width:150px;height:150px">第4个dom</div>
+<div class="dom" id="item5" style="position: absolute;left:200px;top:600px;width:150px;height:150px">第5个dom</div>
+<script src="../focus.js"></script>
+<script>
+    var vm = new FOCUS({
+        focusId: 'item' + FOCUS.prototype.getParam("index",0), // 页面首先获取焦点的dom元素的Id
+        event: {
+            keyOkEvent: function (focusId) {
+                var index = this.getParam("index",0)
+                console.log(index)
+
+
+                this.handleTest()
+            }
+        },
+        methods: {
+            handleTest: function () {
+                console.log("你点击了methods")
+            }
+        }
+    })
+
+
+</script>
+</body>
+</html>
