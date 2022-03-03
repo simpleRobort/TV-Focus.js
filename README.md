@@ -1,4 +1,4 @@
-TV端焦点处理框架 focus.js V1.0.2
+TV端焦点处理框架 focus.js V1.0.3
 ========================
 
 这个框架运用非常的简单，简单使用就3步，适用于用原生写TV端需求的前端，即使从来没开发过TV端的看完基本使用也可以掌握,非常好用！
@@ -214,9 +214,28 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
     })
 ```
 
-同样也是在传入的对象里添加一个新的属性pageState,属性为一个对象，取值为 id：page，原理很简单，不同级别的焦点不会默认互相选中,只能通过提供的FOCUS下的requireFocus（参考第五条）切换焦点
+#### 5.方法 (methods)
+为了尽量使页面的核心代码保存在FOCUS传参内，添加了类似vue的methods来方便代码管理
 
-##### [二级以上页面示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo4.html)
+使用方法：
+```javascript
+ var vm = new FOCUS({
+        methods: {
+                    handleTest: function () {
+                        console.log("你点击了methods")
+                    }
+                },
+         event: {
+                  keyOkEvent: function (focusId) {
+                      this.handleTest()
+                  }
+              }
+    })
+```
+
+传参时传入一个methods对象，用来保存方法，this指向Focus，也通过this.方法名来调用methods内部方法
+
+##### [methods示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo5.html)
 
 ## III new FOCUS传参
 ```javascript
@@ -232,6 +251,7 @@ var vm = new FOCUS({ })
 |pageState| int|设置页面等级，详情参考II.4  |
 |forceMove|object| 修改dom的方向键逻辑，详情参考II.2  |
 |event| object|按键处理事件,详情参考II.3  |
+|methods| object|方法保存，类似vue的methods,详情参考II.5  |
 
 ## IV  框架的Api 
 
@@ -257,12 +277,15 @@ var vm = new FOCUS({ })
 |log| 4(后三个参数可不传)|打印内容，字体大小(默认16px), 文字颜色(默认白色)，背景颜色(默认黑色) | tv端无控制台，所以需要此api显示打印信息  |
 |getDom| 1|int | 根据传参索引返回元素  |
 |getFocus|0| 无 | 返回当前焦点索引  |
+|getParam|3| 字段名:字符串 默认值 地址:默认当前地址 | 解析url传参  |
+|gotoPage|1| url地址 | 单纯的跳转url，可能会在需要跳转前发送请求而存在  |
 |getFocusDom|0| 无 | 返回当前焦点dom元素  |
 
 ## V 版本日志
 
 |   版本号  | 更新内容 | 日期|
 |:----:|:----:|:----:|
+|1.0.3|添加methods传参，用来优化代码规范，添加getparam方法，获取url参数|2022-3-3|
 |1.0.2|添加打印调试api，以及readme.md排版更新，版本日志|2021-12-27|
 |1.0.1| 添加二级以上页面，失焦获焦事件|2021-12-21|
 |1.0.0| 具备tv端焦点框架基本需求|2021-12-20|

@@ -7,6 +7,15 @@
         .focus {
             border: 2px solid #0f0f0f; /*这里就是获取焦点的实现原理了，Focus.js会给获取焦点的元素添加一个名字叫做 focus 的class类*/
         }
+        #tip {
+            position: absolute;
+            left: 800px;
+            top: 160px;
+            background-color: black;
+            color: white;
+            padding: 20px;
+            width: 700px;
+        }
     </style>
 </head>
 <body>
@@ -17,6 +26,29 @@
 <div class="dom" id="item3" style="position: absolute;left:200px;top:400px;width:150px;height:150px">第3个dom</div>
 <div class="dom" id="item4" style="position: absolute;left:400px;top:400px;width:150px;height:150px">第4个dom</div>
 <div class="dom" id="item5" style="position: absolute;left:200px;top:600px;width:150px;height:150px">第5个dom</div>
+
+<div id="tip">
+    var vm = new FOCUS({ <br>
+    focusId: 'item' + FOCUS.prototype.getParam("index",0), // 页面首先获取焦点的dom元素的Id<br>
+    event: {<br>
+        &nbsp;&nbsp;keyOkEvent: function (focusId) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    var index = this.getParam("index",0)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    console.log(index)<br>
+&nbsp;
+&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;    this.handleTest()<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+        &nbsp;&nbsp;},<br>
+    methods: {<br>
+        &nbsp;&nbsp;handleTest: function () {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;    alert("你点击了methods方法里的handletest")<br>
+        &nbsp;&nbsp;}<br>
+    }<br>
+    })<br>
+
+
+    alert("点击确定会触发methods的handleTest方法")
+</div>
 <script src="../focus.js"></script>
 <script>
     var vm = new FOCUS({
@@ -32,12 +64,13 @@
         },
         methods: {
             handleTest: function () {
-                console.log("你点击了methods")
+                alert("你点击了methods方法里的handletest")
             }
         }
     })
 
 
+    // alert("点击确定会触发methods的handleTest方法")
 </script>
 </body>
 </html>
