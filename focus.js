@@ -16,7 +16,6 @@ FOCUS.prototype = {
             i++
         }
         my.initFocusDom(model)
-
         if (model.methods) {
             for (var i in model.methods) {
                 this[i] = model.methods[i]
@@ -230,6 +229,7 @@ FOCUS.prototype = {
                     my.keyOkEvent(my.focusId)
                     break
                 case 32: /*空格键*/
+                case 640: //四川有线 同洲
                 case KEY_OUT:
                 case KEY_BACK:
                     my.keyBackEvent(my.focusId)
@@ -300,13 +300,55 @@ FOCUS.prototype = {
         my.M.push({
             index: i,
             id: my.domIdName + i,
-            top: dom.offsetTop,
-            left: dom.offsetLeft,
+            top: this.getElementTop(dom),
+            left: this.getElementLeft(dom),
             width: dom.offsetWidth,
             height: dom.offsetHeight,
             forceMove: !forceMove[my.domIdName + i] ? [-1,-1,-1,-1] : forceMove[my.domIdName + i],
             pageState: !pageState[my.domIdName + i] ? 1 : pageState[my.domIdName + i]
         })
+    },
+    getElementTop: function(elem){
+
+        var elemTop=elem.offsetTop;//获得elem元素距相对定位的父元素的top
+
+        elem=elem.offsetParent;//将elem换成起相对定位的父元素
+
+        while(elem!=null){//只要还有相对定位的父元素
+
+            //获得父元素 距他父元素的top值,累加到结果中
+
+            elemTop+=elem.offsetTop;
+
+            //再次将elem换成他相对定位的父元素上;
+
+            elem=elem.offsetParent;
+
+        }
+
+        return elemTop;
+
+    },
+    getElementLeft: function(elem){
+
+        var elemLeft=elem.offsetLeft;//获得elem元素距相对定位的父元素的top
+
+        elem=elem.offsetParent;//将elem换成起相对定位的父元素
+
+        while(elem!=null){//只要还有相对定位的父元素
+
+            //获得父元素 距他父元素的top值,累加到结果中
+
+            elemLeft+=elem.offsetLeft;
+
+            //再次将elem换成他相对定位的父元素上;
+
+            elem=elem.offsetParent;
+
+        }
+
+        return elemLeft;
+
     },
     getDom: function (index) {
         return document.getElementById(my.domIdName + index)
@@ -344,10 +386,11 @@ FOCUS.prototype = {
 
         TextColor = TextColor || "#fff"
         bgColor = bgColor || "#000"
-        fontSize = fontSize || "12"
+        fontSize = fontSize || "16"
         if (parseInt(fontSize) != NaN) {
             fontSize = fontSize + 'px'
         }
+
         my.m.style.cssText = 'z-index:9999; font-size: ' + fontSize + '; position:absolute; top:10px; left:10px; width:1240px; height:auto; overflow:hidden; padding:10px; ' +
             'background:' + bgColor + '; color:' + TextColor + ';word-break:break-all; display:block; filter:alpha(opacity=0.7);-moz-opacity: 0.7;-khtml-opacity: 0.7;opacity: 0.7;';
 
@@ -396,7 +439,7 @@ FOCUS.prototype = {
     },
     getParam: function (param, defaults, url, isblur) {
         url = url || window.location.href
-        defaults = defaults == 0?0:!defaults ? null: defaults
+        defaults = !defaults ? null: defaults
         var params = (url.substr(url.indexOf("?") + 1)).split("&");
         isblur = isblur || false;
 
