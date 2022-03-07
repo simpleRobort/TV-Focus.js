@@ -3,6 +3,10 @@ function FOCUS(model) {
     my.domIdName = !model.domIdName ? "item" : model.domIdName
     my.focusId = !model.focusId ? "0" : model.focusId.replace(my.domIdName,"")
     my.focusClass = !model.focusClass ? "focus" : model.focusClass
+    my.darkClass = !model.darkClass ? "active" : model.darkClass
+    my.darkFocus = !model.darkFocus ? [] : model.darkFocus
+    this.initDarkFocusArray(my.darkFocus)
+    this.initDarkGroup(model)
     this.initModelDoms(model)
 }
 
@@ -11,23 +15,42 @@ FOCUS.prototype = {
         var i = 0
         if (!model.forceMove) model.forceMove = {}
         if (!model.pageState) model.pageState = {}
+
         while (my.getDom(i) != null) {
-            my.Mpush(my.getDom(i), i, model.forceMove, model.pageState)
+            my.Mpush(my.getDom(i), i, model.forceMove, model.pageState,my.darkFocus)
             i++
         }
         my.initFocusDom(model)
+        my.initDarkDom(model)
         if (model.methods) {
             for (var i in model.methods) {
                 this[i] = model.methods[i]
             }
         }
     },
+    initDarkGroup: function (model) {
+        var darkGroup = !model.darkGroup ? [] : model.darkGroup
+        if (darkGroup.length == 0) {
+            for (var i = 0; i < my.darkFocus.length; i++) {
+                darkGroup.push(false)
+            }
+        }
+        my.darkGroup = darkGroup
+    },
     initFocusDom: function (model) {
+        // 初始化事件
+        my.initEvent(model)
         // 初始化焦点
         var fDom = document.getElementById(my.domIdName + my.focusId)
         fDom.classList.add(my.focusClass)
-        // 初始化事件
-        my.initEvent(model)
+        my.focusEvent(my.focusId)
+    },
+    initDarkDom: function (model) {
+        for (var i = 0; i < this.D.length; i++) {
+            var fDom = document.getElementById(my.domIdName + my.D[i])
+            fDom.classList.add(my.darkClass)
+            if (i != my.focusId) my.darkFocusEvent(my.D[i])
+        }
     },
     initEvent: function (model) {
         if (!model.event) model.event = {}
@@ -49,26 +72,29 @@ FOCUS.prototype = {
         my.keyBackEvent = !model.event.keyBackEvent ? function () {}: model.event.keyBackEvent
         my.keyOkEvent = !model.event.keyOkEvent ? function () {}: model.event.keyOkEvent
         my.focusEvent = !model.event.focusEvent ? function () {}: model.event.focusEvent
-        my.unfocusEvent = !model.event.focusEvent ? function () {}: model.event.unfocusEvent
+        my.unfocusEvent = !model.event.unfocusEvent ? function () {}: model.event.unfocusEvent
+        my.darkFocusEvent = !model.event.darkFocusEvent ? function () {}: model.event.darkFocusEvent
+        my.undarkFocusEvent = !model.event.undarkFocusEvent ? function () {}: model.event.undarkFocusEvent
         my.initMoveEvent(model)
     },
     initMoveEvent: function (model) {
-        my.keyUpEvent = function () {
-            var next = my.findNextDom(0)
-            my.requireFocus(next)
+        function dirEvent(dir) {
+            return function () {
+                var next = my.findNextDom(dir)
+                if (next == -1) return
+                if (my.M[next].darkState != -1 && my.M[next].darkState != my.M[my.focusId].darkState) {
+                    if (my.darkGroup[my.M[next].darkState]) {
+                        next = my.D[my.M[next].darkState]
+                    }
+                }
+
+                my.requireFocus(next)
+            }
         }
-        my.keyDownEvent = function () {
-            var next = my.findNextDom(2)
-            my.requireFocus(next)
-        }
-        my.keyLeftEvent = function () {
-            var next = my.findNextDom(1)
-            my.requireFocus(next)
-        }
-        my.keyRightEvent = function () {
-            var next = my.findNextDom(3)
-            my.requireFocus(next)
-        }
+        my.keyUpEvent = dirEvent(0)
+        my.keyDownEvent = dirEvent(2)
+        my.keyLeftEvent = dirEvent(1)
+        my.keyRightEvent = dirEvent(3)
         my.initKeyEvent()
     },
     findNextDom: function (dir) {
@@ -295,8 +321,9 @@ FOCUS.prototype = {
             }
         }
     },
-    Mpush: function (dom, i, forceMove, pageState) {
+    Mpush: function (dom, i, forceMove, pageState, darkFocus) {
         if (!my.M) my.M = []
+        var darkState = this.getDarkState(i,darkFocus)
         my.M.push({
             index: i,
             id: my.domIdName + i,
@@ -305,8 +332,19 @@ FOCUS.prototype = {
             width: dom.offsetWidth,
             height: dom.offsetHeight,
             forceMove: !forceMove[my.domIdName + i] ? [-1,-1,-1,-1] : forceMove[my.domIdName + i],
-            pageState: !pageState[my.domIdName + i] ? 1 : pageState[my.domIdName + i]
+            pageState: !pageState[my.domIdName + i] ? 1 : pageState[my.domIdName + i],
+            darkState: darkState
         })
+    },
+    getDarkState: function (index,darkFocus) {
+        for (var i = 0;i < darkFocus.length; i++) {
+            for (var y = 0;y < darkFocus[i].length; y++) {
+                if (index == darkFocus[i][y]) {
+                    return i
+                }
+            }
+        }
+        return -1
     },
     getElementTop: function(elem){
 
@@ -353,8 +391,25 @@ FOCUS.prototype = {
     getDom: function (index) {
         return document.getElementById(my.domIdName + index)
     },
+    initDarkFocusArray: function (darkArr) {
+        if (!my.D) my.D = []
+        for (var i = 0; i < darkArr.length; i++) {
+            my.D.push(darkArr[i][0])
+        }
+
+    },
     requireFocus: function (i) {
         if (i == -1) return
+        var darkFlag = false
+        if (my.M[i].darkState != -1 && my.D[my.M[i].darkState] != i) {
+            // 移除旧暗焦点
+            var dDom = document.getElementById(my.domIdName + my.D[my.M[i].darkState])
+            if (dDom != null) {
+                dDom.classList.remove(my.darkClass)
+                my.undarkFocusEvent(my.D[my.M[i].darkState])
+            }
+            darkFlag = true
+        }
         // 移除旧焦点
         var fDom = document.getElementById(my.domIdName + my.focusId)
         if (fDom != null) {
@@ -366,6 +421,12 @@ FOCUS.prototype = {
         if (NDom != null) {
             my.focusId = i
             NDom.classList.add(my.focusClass)
+            if (darkFlag) {
+                // 获取新暗焦点
+                NDom.classList.add(my.darkClass)
+                my.D[my.M[i].darkState] = i
+                my.darkFocusEvent(my.focusId)
+            }
             my.focusEvent(my.focusId)
         }
     },

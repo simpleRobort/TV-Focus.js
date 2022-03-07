@@ -1,4 +1,4 @@
-TV端焦点处理框架 focus.js V1.0.3
+TV端焦点处理框架 focus.js V1.0.4
 ========================
 
 这个框架运用非常的简单，简单使用就3步，适用于用原生写TV端需求的前端，即使从来没开发过TV端的看完基本使用也可以掌握,非常好用！
@@ -199,6 +199,8 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
 |keyBackEvent| 遥控器返回键，有一个传参(当前获取焦点的索引)  |
 |focusEvent| 获取焦点后事件，有一个传参(当前获取焦点的索引)  |
 |unfocusEvent| 失去焦点后事件，有一个传参(失去焦点的索引)  |
+|darkFocusEvent| 获取暗焦点后事件，有一个传参(失去焦点的索引)  |
+|undarkFocusEvent| 失去暗焦点后事件，有一个传参(失去焦点的索引)  |
 
 #### 4.二级以上页面 (pageState)
 当页面有若干个焦点是在触发某一个事件才能够被获取焦点的，在事件未触发时不应该被获取焦点，如果通过上面的强制事件频繁的添加-2，那可太麻烦了，这时候就pageState就出现了
@@ -237,6 +239,36 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
 
 ##### [methods示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo5.html)
 
+#### 5.暗焦点 (darkFocus)
+tv端经常会有一个需求，页面上会有多个焦点，比如说一个节目，你可能会需要其他的焦点来表示当前所属于的分类，我们称之为暗焦点
+
+```javascript
+ var vm = new FOCUS({
+        darkFocus:[[1,0,2,3,4],[5,6,7,8]], //暗焦点列表一个数组包含多个数组，参数为id后的索引，代表这几个dom为一块暗焦点，并且数组第一个索引为默认选中的暗焦点
+        darkGroup:[true,true], // 长度与darkFocus对应，代表每次进入暗焦点列表时，是否始终让这个列表的暗焦点被选中
+        darkClass: "active", // 暗焦点被添加的class ,默认就是 active
+        event: {
+            darkFocusEvent: function (id) {
+                // 你有可能会需要在焦点切换时根据当前的分类渲染新数据，
+                // 我们希望你使用的是这个事件而不是focusEvent
+                // 这是为了防抖,在暗焦点没改变时重复获焦不会重复触发这个事件
+                console.log("获取暗焦点",id) 
+            },
+            undarkFocusEvent: function (id) {
+                console.log("丢失暗焦点",id)
+            },
+            focusEvent: function (id) {
+                console.log("获取焦点",id)
+            },
+            unfocusEvent: function (id) {
+                console.log("丢失焦点",id)
+            },
+        }
+    })
+```
+
+##### [darkFocus示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo6.html)
+
 ## III new FOCUS传参
 ```javascript
 var vm = new FOCUS({ })
@@ -252,6 +284,9 @@ var vm = new FOCUS({ })
 |forceMove|object| 修改dom的方向键逻辑，详情参考II.2  |
 |event| object|按键处理事件,详情参考II.3  |
 |methods| object|方法保存，类似vue的methods,详情参考II.5  |
+|darkFocus| array|暗焦点，在焦点在别处时依旧显示特殊样式,每个数组第一个索引为默认选中的暗焦点,详情参考II.6  |
+|darkClass| string|暗焦点被添加的class ,默认就是 active,详情参考II.6  |
+|darkGroup| array|长度与darkFocus对应，代表每次进入暗焦点列表时，是否始终让这个列表的暗焦点被选中,详情参考II.6  |
 
 ## IV  框架的Api 
 
@@ -285,6 +320,7 @@ var vm = new FOCUS({ })
 
 |   版本号  | 更新内容 | 日期|
 |:----:|:----:|:----:|
+|1.0.4|添加暗焦点相关事件，以及暗焦点防抖等处理|2022-3-7|
 |1.0.3|添加methods传参，用来优化代码规范，添加getparam方法，获取url参数|2022-3-3|
 |1.0.2|添加打印调试api，以及readme.md排版更新，版本日志|2021-12-27|
 |1.0.1| 添加二级以上页面，失焦获焦事件|2021-12-21|
