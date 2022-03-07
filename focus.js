@@ -439,7 +439,7 @@ FOCUS.prototype = {
     },
     getParam: function (param, defaults, url, isblur) {
         url = url || window.location.href
-        defaults = !defaults ? null: defaults
+        defaults = !defaults ? defaults == 0 ? 0: null: defaults
         var params = (url.substr(url.indexOf("?") + 1)).split("&");
         isblur = isblur || false;
 
