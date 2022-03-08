@@ -1,4 +1,4 @@
-TV端焦点处理框架 focus.js V1.0.4
+TV端焦点处理框架 focus.js V1.0.5
 ========================
 
 这个框架运用非常的简单，简单使用就3步，适用于用原生写TV端需求的前端，即使从来没开发过TV端的看完基本使用也可以掌握,非常好用！
@@ -188,7 +188,25 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
 
                         break
                 }
-            }
+            },
+            changeIndexBeforeFind: function (dir,focusId) {
+                // 两个传参(dir代表方向：上左下右依次为0123,当前焦点id)
+                // Focus会在自动寻找下一个焦点前触发这个事件，如果这个函数返回了一个指定索引
+                // 那么框架就不会浪费时间去寻找下一个焦点，直接使用你返回的索引
+                // 例：
+                if (dir == 3 && focusId == 0) {
+                    return 2
+                } 
+                // 当在焦点索引为0的dom按下 右方向键，返回一个索引2，框架会放弃计算
+                // 直接让索引为2的获取焦点
+            },
+            changeIndexAfterFind: function (dir,focusId,nextId) {
+                 // 三个传参(前两个同上，nextId为计算完成的焦点，如果没有合适的焦点就会返回-1)
+                 // Focus会在寻找完焦点后触发这个事件，如果这个函数返回了一个指定索引
+                 // 那么框架就抛弃本来应该成为焦点的nextId，直接使用你返回的索引
+           
+             },
+            
         }
     })
 ```
@@ -201,6 +219,8 @@ tv端除了上下左右方向键与数字键，还有其他的事件，这里也
 |unfocusEvent| 失去焦点后事件，有一个传参(失去焦点的索引)  |
 |darkFocusEvent| 获取暗焦点后事件，有一个传参(失去焦点的索引)  |
 |undarkFocusEvent| 失去暗焦点后事件，有一个传参(失去焦点的索引)  |
+|changeIndexBeforeFind| 按任意方向键后触发，详情见上图  |
+|changeIndexAfterFind| 按任意方向键后触发，详情见上图  |
 
 #### 4.二级以上页面 (pageState)
 当页面有若干个焦点是在触发某一个事件才能够被获取焦点的，在事件未触发时不应该被获取焦点，如果通过上面的强制事件频繁的添加-2，那可太麻烦了，这时候就pageState就出现了
@@ -267,7 +287,13 @@ tv端经常会有一个需求，页面上会有多个焦点，比如说一个节
     })
 ```
 
-##### [darkFocus示例地址](https://simplerobort.github.io/TV-Focus.js/demo/demo6.html)
+#### 6.运用各api完成一个tv端常见demo (demo)
+tv最多的就是多级栏目的需求，在焦点切换时，对应的子列表，子节目都要发生变化，本文章主要介绍框架的使用，
+故具体内容可下载源码与focus文件了解
+
+![示例图片](https://simplerobort.github.io/TV-Focus.js/image/example/example02.png) 
+
+##### [demo地址](https://simplerobort.github.io/TV-Focus.js/demo/demo7.html)
 
 ## III new FOCUS传参
 ```javascript
@@ -287,6 +313,7 @@ var vm = new FOCUS({ })
 |darkFocus| array|暗焦点，在焦点在别处时依旧显示特殊样式,每个数组第一个索引为默认选中的暗焦点,详情参考II.6  |
 |darkClass| string|暗焦点被添加的class ,默认就是 active,详情参考II.6  |
 |darkGroup| array|长度与darkFocus对应，代表每次进入暗焦点列表时，是否始终让这个列表的暗焦点被选中,详情参考II.6  |
+|unFocusArr| array| 数组，数组可以有多个id索引，代表初始不允许被选中的焦点，之后可用下面介绍的 openFocus 解除禁止被选中 |
 
 ## IV  框架的Api 
 
@@ -315,11 +342,14 @@ var vm = new FOCUS({ })
 |getParam|3| 字段名:字符串 默认值 地址:默认当前地址 | 解析url传参  |
 |gotoPage|1| url地址 | 单纯的跳转url，可能会在需要跳转前发送请求而存在  |
 |getFocusDom|0| 无 | 返回当前焦点dom元素  |
+|stopFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点无法被获取焦点  |
+|openFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点从stopFocus内移除，能够获取焦点  |
 
 ## V 版本日志
 
 |   版本号  | 更新内容 | 日期|
 |:----:|:----:|:----:|
+|1.0.5|添加焦点切换前后事件，动态修改焦点获取与否，增加框架的灵活性|2022-3-8|
 |1.0.4|添加暗焦点相关事件，以及暗焦点防抖等处理|2022-3-7|
 |1.0.3|添加methods传参，用来优化代码规范，添加getparam方法，获取url参数|2022-3-3|
 |1.0.2|添加打印调试api，以及readme.md排版更新，版本日志|2021-12-27|

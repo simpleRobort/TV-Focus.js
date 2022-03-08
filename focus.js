@@ -5,6 +5,7 @@ function FOCUS(model) {
     my.focusClass = !model.focusClass ? "focus" : model.focusClass
     my.darkClass = !model.darkClass ? "active" : model.darkClass
     my.darkFocus = !model.darkFocus ? [] : model.darkFocus
+    my.unFocusArr = !model.unFocusArr ? [] : model.unFocusArr
     this.initDarkFocusArray(my.darkFocus)
     this.initDarkGroup(model)
     this.initModelDoms(model)
@@ -20,13 +21,14 @@ FOCUS.prototype = {
             my.Mpush(my.getDom(i), i, model.forceMove, model.pageState,my.darkFocus)
             i++
         }
-        my.initFocusDom(model)
-        my.initDarkDom(model)
         if (model.methods) {
             for (var i in model.methods) {
                 this[i] = model.methods[i]
             }
         }
+        my.initFocusDom(model)
+        my.initDarkDom(model)
+
     },
     initDarkGroup: function (model) {
         var darkGroup = !model.darkGroup ? [] : model.darkGroup
@@ -49,7 +51,7 @@ FOCUS.prototype = {
         for (var i = 0; i < this.D.length; i++) {
             var fDom = document.getElementById(my.domIdName + my.D[i])
             fDom.classList.add(my.darkClass)
-            if (i != my.focusId) my.darkFocusEvent(my.D[i])
+            if (my.D[i] != my.focusId) my.darkFocusEvent(my.D[i])
         }
     },
     initEvent: function (model) {
@@ -75,17 +77,30 @@ FOCUS.prototype = {
         my.unfocusEvent = !model.event.unfocusEvent ? function () {}: model.event.unfocusEvent
         my.darkFocusEvent = !model.event.darkFocusEvent ? function () {}: model.event.darkFocusEvent
         my.undarkFocusEvent = !model.event.undarkFocusEvent ? function () {}: model.event.undarkFocusEvent
+        my.changeIndexBeforeFind = !model.event.changeIndexBeforeFind ? function () {}: model.event.changeIndexBeforeFind
+        my.changeIndexAfterFind = !model.event.changeIndexAfterFind ? function () {}: model.event.changeIndexAfterFind
         my.initMoveEvent(model)
     },
     initMoveEvent: function (model) {
         function dirEvent(dir) {
             return function () {
-                var next = my.findNextDom(dir)
-                if (next == -1) return
-                if (my.M[next].darkState != -1 && my.M[next].darkState != my.M[my.focusId].darkState) {
-                    if (my.darkGroup[my.M[next].darkState]) {
-                        next = my.D[my.M[next].darkState]
+                var next
+                var handleByUser = this.changeIndexBeforeFind(dir,my.focusId)
+                if (!handleByUser && handleByUser != 0) {
+                    next = my.findNextDom(dir)
+                    while (this.checkStopFocus(next,this.unFocusArr)) {
+                        next = my.findNextDom(dir,next)
                     }
+                    var changeIndexAfterFind = this.changeIndexAfterFind(dir,my.focusId,next)
+                    if (changeIndexAfterFind != undefined) next = changeIndexAfterFind
+                    if (next == -1) return
+                    if (my.M[next].darkState != -1 && my.M[next].darkState != my.M[my.focusId].darkState) {
+                        if (my.darkGroup[my.M[next].darkState]) {
+                            next = my.D[my.M[next].darkState]
+                        }
+                    }
+                } else {
+                    next = handleByUser
                 }
 
                 my.requireFocus(next)
@@ -97,30 +112,31 @@ FOCUS.prototype = {
         my.keyRightEvent = dirEvent(3)
         my.initKeyEvent()
     },
-    findNextDom: function (dir) {
+    findNextDom: function (dir,index) {
         var next = -1
+        var flag = !index ? index == 0 ? 0 : my.focusId : index
         var sheep = {
             leftSize: 1920,
-            height: my.M[my.focusId].height,
+            height: my.M[flag].height,
             topSize: 1080,
-            width: my.M[my.focusId].width
+            width: my.M[flag].width
         }
-        if (my.M[my.focusId].forceMove[dir] == -2) return next
-        if (my.M[my.focusId].forceMove[dir] == -1) {
+        if (my.M[flag].forceMove[dir] == -2) return next
+        if (my.M[flag].forceMove[dir] == -1) {
             switch (dir) {
                 case 0:
                     for (var i = 0 ; i < my.M.length; i++) {
-                        if (i != my.focusId && my.M[my.focusId].pageState == my.M[i].pageState) {
-                            var focusRight = my.M[my.focusId].left + my.M[my.focusId].width
-                            var focusLeft = my.M[my.focusId].left
-                            var focusTop = my.M[my.focusId].top + my.M[my.focusId].height * 0.5
+                        if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
+                            var focusRight = my.M[flag].left + my.M[flag].width
+                            var focusLeft = my.M[flag].left
+                            var focusTop = my.M[flag].top + my.M[flag].height * 0.5
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottomTop = my.M[i].top + my.M[i].height
                             if (my.M[i].left  < focusRight && nextRight > focusLeft && nextBottomTop <= focusTop) {
                                 // 循环的left小于焦点右侧left并且循环的右侧left大于焦点的left并且循环底部top小于焦点的top
-                                if ((my.M[my.focusId].top - nextBottomTop) < sheep.topSize) {
+                                if ((my.M[flag].top - nextBottomTop) < sheep.topSize) {
                                     // 距离焦点的top比上一个还小时，就代表这次循环是目前最适合的焦点
-                                    sheep.topSize = my.M[my.focusId].top - nextBottomTop
+                                    sheep.topSize = my.M[flag].top - nextBottomTop
                                     next = i
                                 }
                             }
@@ -129,16 +145,16 @@ FOCUS.prototype = {
                     break
                 case 1:
                     for (var i = 0 ; i < my.M.length; i++) {
-                        if (i != my.focusId && my.M[my.focusId].pageState == my.M[i].pageState) {
+                        if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottom = my.M[i].top + my.M[i].height
-                            var focusBottomTop = my.M[my.focusId].top + my.M[my.focusId].height
-                            var focusLeft = my.M[my.focusId].left + my.M[my.focusId].width * 0.5
-                            if (nextBottom  > my.M[my.focusId].top && my.M[i].top < focusBottomTop && nextRight <= focusLeft) {
+                            var focusBottomTop = my.M[flag].top + my.M[flag].height
+                            var focusLeft = my.M[flag].left + my.M[flag].width * 0.5
+                            if (nextBottom  > my.M[flag].top && my.M[i].top < focusBottomTop && nextRight <= focusLeft) {
                                 // 循环的顶部小于焦点底部的top并且循环的底部大于焦点的top并且循环右侧left小于焦点的left
-                                if ((my.M[my.focusId].left - nextRight) < sheep.leftSize) {
+                                if ((my.M[flag].left - nextRight) < sheep.leftSize) {
                                     // 距离焦点的left比上一下还小时，就代表这次循环是目前最适合的焦点
-                                    sheep.leftSize = my.M[my.focusId].left  - nextRight
+                                    sheep.leftSize = my.M[flag].left  - nextRight
                                     next = i
                                 }
                             }
@@ -147,10 +163,10 @@ FOCUS.prototype = {
                     break
                 case 2:
                     for (var i = 0 ; i < my.M.length; i++) {
-                        if (i != my.focusId && my.M[my.focusId].pageState == my.M[i].pageState) {
-                            var focusRight = my.M[my.focusId].left + my.M[my.focusId].width
-                            var focusLeft = my.M[my.focusId].left
-                            var focusTop = my.M[my.focusId].top - my.M[my.focusId].height * 0.5
+                        if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
+                            var focusRight = my.M[flag].left + my.M[flag].width
+                            var focusLeft = my.M[flag].left
+                            var focusTop = my.M[flag].top - my.M[flag].height * 0.5
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottomTop = my.M[i].top + my.M[i].height
                             if (my.M[i].left  < focusRight && nextRight > focusLeft && my.M[i].top >= focusTop) {
@@ -166,11 +182,11 @@ FOCUS.prototype = {
                     break
                 case 3:
                     for (var i = 0 ; i < my.M.length; i++) {
-                        if (i != my.focusId && my.M[my.focusId].pageState == my.M[i].pageState) {
-                            var focusRight = my.M[my.focusId].left + my.M[my.focusId].width*0.5
+                        if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
+                            var focusRight = my.M[flag].left + my.M[flag].width*0.5
                             var nextBottom= my.M[i].top + my.M[i].height
-                            var focusBottomTop = my.M[my.focusId].top + my.M[my.focusId].height
-                            if (nextBottom  > my.M[my.focusId].top && my.M[i].top < focusBottomTop && my.M[i].left >= focusRight) {
+                            var focusBottomTop = my.M[flag].top + my.M[flag].height
+                            if (nextBottom  > my.M[flag].top && my.M[i].top < focusBottomTop && my.M[i].left >= focusRight) {
                                 // 循环的顶部小于焦点底部的top并且循环的底部大于焦点的top并且循环left大于焦点的右侧left
                                 if ((my.M[i].left - focusRight) < sheep.leftSize) {
                                     // 距离焦点的left比上一下还小时，就代表这次循环是目前最适合的焦点
@@ -184,7 +200,7 @@ FOCUS.prototype = {
             }
             return next
         } else {
-            next = my.M[my.focusId].forceMove[dir].replace(my.domIdName,'')
+            next = my.M[flag].forceMove[dir].replace(my.domIdName,'')
             return next
         }
 
@@ -346,6 +362,9 @@ FOCUS.prototype = {
         }
         return -1
     },
+    getDarkIndex: function (index) {
+        return this.D[index]
+    },
     getElementTop: function(elem){
 
         var elemTop=elem.offsetTop;//获得elem元素距相对定位的父元素的top
@@ -397,6 +416,27 @@ FOCUS.prototype = {
             my.D.push(darkArr[i][0])
         }
 
+    },
+    stopFocus: function (iArr) {
+        for (var j = 0;j < iArr.length;j++) {
+            for (var i = 0;i < this.unFocusArr.length;i++) {
+                if (this.unFocusArr[i] == iArr[j]) return
+            }
+            this.unFocusArr.push(iArr[j])
+        }
+    },
+    checkStopFocus: function (index,arr) {
+        for (var i = 0;i < arr.length;i++) {
+            if (arr[i] == index) return true
+        }
+        return false
+    },
+    openFocus: function (iArr) {
+        for (var j = 0;j < iArr.length;j++) {
+            for (var i = 0;i < this.unFocusArr.length;i++) {
+                if (this.unFocusArr[i] == iArr[j]) this.unFocusArr.splice(i,1)
+            }
+        }
     },
     requireFocus: function (i) {
         if (i == -1) return

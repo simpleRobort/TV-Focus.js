@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="page-view-size" content="1920*1080">
+    <title>demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 1920px;
+            height: 1080px;
+        }
+
+        .item {
+            position: absolute;
+        }
+
+
+        #leftContainer {
+            position: absolute;
+            width: 500px;
+            height: 1080px;
+            background-color: royalblue;
+        }
+
+        #leftContainer .item {
+            width: 200px;
+            height: 90px;
+            border-radius: 50px;
+            text-align: center;
+            line-height: 90px;
+            color: white;
+            font-size: 20px;
+        }
+
+        #leftContainer .active {
+            background-color: darkblue;
+        }
+
+        #leftContainer .focus {
+            background-color: lightskyblue;
+        }
+
+        #rightContainer {
+            position: absolute;
+            left: 500px;
+            width: 1420px;
+            height: 1080px;
+            background-color: deepskyblue;
+        }
+
+
+        /*每一块都要单独设置获焦的样式与未获焦的样式*/
+        #rightHead {
+            position: absolute;
+            height: 200px;
+            width: 100%;
+            border-bottom: 2px solid black;
+        }
+
+        #rightHead .item {
+            width: 100px;
+            height: 60px;
+            border-radius: 40px;
+            text-align: center;
+            line-height: 60px;
+            color: white;
+            font-size: 20px;
+        }
+
+        #rightHead .active {
+            background-color: white;
+            color: darkslateblue;
+        }
+
+        #rightHead .focus {
+            background-color: black;
+            color: white;
+        }
+
+        #rightBottom {
+            position: absolute;
+            top: 200px;
+            height: 200px;
+            width: 100%;
+        }
+
+        #rightBottom .item {
+            position: absolute;
+            background-color: pink;
+            width: 150px;
+            height: 150px;
+        }
+
+        #rightBottom .focus {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+<div id="bg" class="box">
+    <div id="leftContainer">
+        <div class="item" id="item0" style="left:150px;top:150px">
+            <div class="pic">父栏目1</div>
+        </div>
+        <div class="item" id="item1" style="left:150px;top:250px;">
+            <div class="pic">父栏目2</div>
+        </div>
+        <div class="item" id="item2" style="left:150px;top:350px;">
+            <div class="pic">父栏目3</div>
+        </div>
+        <div class="item" id="item3" style="left:150px;top:450px;">
+            <div class="pic">父栏目4</div>
+        </div>
+        <div class="item" id="item4" style="left:150px;top:550px;">
+            <div class="pic">父栏目5</div>
+        </div>
+    </div>
+
+    <div id="rightContainer">
+        <div id="rightHead">
+            <div class="item" id="item5" style="left:100px;top:100px;">
+                <div class="pic">子栏目1</div>
+            </div>
+            <div class="item" id="item6" style="left:250px;top:100px;">
+                <div class="pic">子栏目2</div>
+            </div>
+            <div class="item" id="item7" style="left:400px;top:100px;">
+                <div class="pic">子栏目3</div>
+            </div>
+            <div class="item" id="item8" style="left:550px;top:100px;">
+                <div class="pic">子栏目4</div>
+            </div>
+        </div>
+
+        <div id="rightBottom">
+            <div class="item" id="item9" style="left:100px;top:100px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目1</p>
+                </div>
+            </div>
+            <div class="item" id="item10" style="left:300px;top:100px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目2</p>
+                </div>
+            </div>
+            <div class="item" id="item11" style="left:500px;top:100px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目3</p>
+                </div>
+            </div>
+            <div class="item" id="item12" style="left:700px;top:100px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目4</p>
+                </div>
+            </div>
+            <div class="item" id="item13" style="left:100px;top:300px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目5</p>
+                </div>
+            </div>
+            <div class="item" id="item14" style="left:300px;top:300px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目6</p>
+                </div>
+            </div>
+            <div class="item" id="item15" style="left:500px;top:300px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目7</p>
+                </div>
+            </div>
+            <div class="item" id="item16" style="left:700px;top:300px;">
+                <div class="pic">
+                    <img src="" alt="">
+                    <p>子节目8</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../focus.js"></script>
+<script>
+    // 模拟后台数据
+    var arr = [
+        ["动漫", "音乐", "影视"],
+        ["综艺", "电影", "体育", "体育"],
+        ["游戏", "娱乐"],
+        ["日剧", "美剧", "韩剧"],
+        ["中国风", "欧美风", "韩国风"]
+    ]
+    // 模拟后台子数据
+    var sonarr = [
+        [],
+        ["子节目1", "子节目2", "子节目3", "子节目4", "子节目5", "子节目6"],
+        ["子节目1"],
+        ["子节目1", "子节目2", "子节目3", "子节目4"]
+    ]
+    var vm = new FOCUS({
+        domIdName: "item",
+        focusId: 'item' + FOCUS.prototype.getParam("indexid", "1"),
+        darkFocus: [[1, 0, 2, 3, 4], [5, 6, 7, 8]],
+        darkClass: "active",
+        darkGroup: [true, true],
+        event: {
+            darkFocusEvent: function (id) {
+                switch (id) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        this.renderSons(id)
+                        break
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        this.renderEpis(id)
+                        break
+                }
+            },
+            changeIndexBeforeFind: function (dir, id) {
+                if (dir == 3) {
+                    // 往右
+                    if (id < 5 && sonarr[this.getDarkIndex(1) - 5].length == 0) {
+                        return 5
+                    }
+                }
+            },
+            changeIndexAfterFind: function (dir, id, find) {
+                if (dir == 2) {
+                    // 往下
+                    if (id > 4 && id < 9 && find == -1) {
+                        return 9
+                    }
+                }
+            }
+        },
+        methods: {
+            renderSons: function (id) {
+                for (var i = 0; i < 4; i++) {
+                    var dom = document.getElementById("item" + (i + 5)).getElementsByClassName("pic")[0]
+                    if (!arr[id][i]) {
+                        dom.style.display = "none"
+                        this.stopFocus([i + 5])
+                    } else {
+                        dom.style.display = "block"
+                        dom.innerHTML = arr[id][i]
+                        this.openFocus([i + 5])
+                    }
+                }
+                this.requireFocus(5)
+                this.requireFocus(id)
+            },
+            renderEpis: function (id) {
+                for (var i = 0; i < 8; i++) {
+                    var dom = document.getElementById("item" + (i + 9))
+                    if (!sonarr[id - 5][i]) {
+                        dom.style.display = "none"
+                        this.stopFocus([i + 9])
+                    } else {
+                        dom.style.display = "block"
+                        dom.getElementsByTagName("p")[0].innerHTML = sonarr[id - 5][i]
+                        this.openFocus([i + 9])
+                    }
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
