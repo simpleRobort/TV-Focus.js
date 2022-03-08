@@ -17,6 +17,7 @@ FOCUS.prototype = {
         if (!model.forceMove) model.forceMove = {}
         if (!model.pageState) model.pageState = {}
 
+        this.model = model
         while (my.getDom(i) != null) {
             my.Mpush(my.getDom(i), i, model.forceMove, model.pageState,my.darkFocus)
             i++
@@ -29,6 +30,14 @@ FOCUS.prototype = {
         my.initFocusDom(model)
         my.initDarkDom(model)
 
+    },
+    refresh: function () {
+        my.M = []
+        var i = 0
+        while (my.getDom(i) != null) {
+            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState,my.darkFocus)
+            i++
+        }
     },
     initDarkGroup: function (model) {
         var darkGroup = !model.darkGroup ? [] : model.darkGroup
