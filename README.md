@@ -1,4 +1,4 @@
-TV端焦点处理框架 focus.js V1.0.5
+TV端焦点处理框架 focus.js V1.0.6
 ========================
 
 这个框架运用非常的简单，简单使用就3步，适用于用原生写TV端需求的前端，即使从来没开发过TV端的看完基本使用也可以掌握,非常好用！
@@ -295,6 +295,39 @@ tv最多的就是多级栏目的需求，在焦点切换时，对应的子列表
 
 ##### [demo地址](https://simplerobort.github.io/TV-Focus.js/demo/demo7.html)
 
+#### 7.生命周期 (生命周期)
+按目前的需求引入了一个初始创建时的生命周期created
+
+使用方式:
+
+```javascript
+ var vm = new FOCUS({
+         created: function (next) {
+             this.addDiv()
+             next() //必须调用， 不调用无法库就不执行初始化
+         },
+         methods: {
+             addDiv: function () {
+                 var div = document.createElement("div")
+                 div.classList = "dom"
+                 div.id = "item6"
+                 var newContent = document.createTextNode("生命周期添加的dom");
+ 
+                 div.appendChild(newContent);
+ 
+                 document.body.appendChild(div);
+             }
+         }
+     })
+```
+##### [demo地址](https://simplerobort.github.io/TV-Focus.js/demo/demo8.html)
+
+|   周期名称  | 传参 | 描述 |
+|:----:|:----:|:----:|
+|created| next |提供一个next方法，在调用后库才会继续抓取页面的焦点并且初始化,此时能访问methods里的方法 |
+
+
+
 ## III new FOCUS传参
 ```javascript
 var vm = new FOCUS({ })
@@ -344,11 +377,13 @@ var vm = new FOCUS({ })
 |getFocusDom|0| 无 | 返回当前焦点dom元素  |
 |stopFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点无法被获取焦点  |
 |openFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点从stopFocus内移除，能够获取焦点  |
+|refresh|0| 无 | 调用后库会丢弃原来的焦点集合，重新去抓取页面上的焦点  |
 
 ## V 版本日志
 
 |   版本号  | 更新内容 | 日期|
 |:----:|:----:|:----:|
+|1.0.6|提供一个初始化的生命周期，为了适配页面初始化时要添加dom的需求|2022-5-19|
 |1.0.5|添加焦点切换前后事件，动态修改焦点获取与否，增加框架的灵活性|2022-3-8|
 |1.0.4|添加暗焦点相关事件，以及暗焦点防抖等处理|2022-3-7|
 |1.0.3|添加methods传参，用来优化代码规范，添加getparam方法，获取url参数|2022-3-3|

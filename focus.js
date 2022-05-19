@@ -6,6 +6,9 @@ function FOCUS(model) {
     my.darkClass = !model.darkClass ? "active" : model.darkClass
     my.darkFocus = !model.darkFocus ? [] : model.darkFocus
     my.unFocusArr = !model.unFocusArr ? [] : model.unFocusArr
+    my.created = !model.created ? function (next) {
+        next()
+    } : model.created
     this.initDarkFocusArray(my.darkFocus)
     this.initDarkGroup(model)
     this.initModelDoms(model)
@@ -13,23 +16,27 @@ function FOCUS(model) {
 
 FOCUS.prototype = {
     initModelDoms: function (model) {
-        var i = 0
+
         if (!model.forceMove) model.forceMove = {}
         if (!model.pageState) model.pageState = {}
 
         this.model = model
-        while (my.getDom(i) != null) {
-            my.Mpush(my.getDom(i), i, model.forceMove, model.pageState,my.darkFocus)
-            i++
-        }
         if (model.methods) {
-            for (var i in model.methods) {
-                this[i] = model.methods[i]
+            for (var y in model.methods) {
+                this[y] = model.methods[y]
             }
         }
-        my.initFocusDom(model)
-        my.initDarkDom(model)
+        this.created(this.afterCreated)
+    },
+    afterCreated: function () {
+        var i = 0
+        while (my.getDom(i) != null) {
+            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState,my.darkFocus)
+            i++
+        }
 
+        my.initFocusDom(my.model)
+        my.initDarkDom(my.model)
     },
     refresh: function () {
         my.M = []
