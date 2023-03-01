@@ -1,5 +1,6 @@
 function FOCUS(model) {
     window.my = this
+    window.model = model;
     my.domIdName = !model.domIdName ? "item" : model.domIdName
     my.focusId = !model.focusId ? "0" : model.focusId.replace(my.domIdName,"")
     my.focusClass = !model.focusClass ? "focus" : model.focusClass
@@ -9,12 +10,17 @@ function FOCUS(model) {
     my.created = !model.created ? function (next) {
         next()
     } : model.created
-    this.initDarkFocusArray(my.darkFocus)
-    this.initDarkGroup(model)
-    this.initModelDoms(model)
+
+    this.init()
 }
 
 FOCUS.prototype = {
+    init: function() {
+        this.initDarkFocusArray(my.darkFocus)
+        this.initDarkGroup(model)
+        this.initModelDoms(model)
+    },
+
     initModelDoms: function (model) {
 
         if (!model.forceMove) model.forceMove = {}
@@ -31,7 +37,7 @@ FOCUS.prototype = {
     afterCreated: function () {
         var i = 0
         while (my.getDom(i) != null) {
-            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState,my.darkFocus)
+            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState, my.darkFocus);
             i++
         }
 
@@ -42,15 +48,15 @@ FOCUS.prototype = {
         my.M = []
         var i = 0
         while (my.getDom(i) != null) {
-            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState,my.darkFocus)
+            my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState, my.darkFocus);
             i++
         }
     },
     initDarkGroup: function (model) {
         var darkGroup = !model.darkGroup ? [] : model.darkGroup
-        if (darkGroup.length == 0) {
+        if (darkGroup.length === 0) {
             for (var i = 0; i < my.darkFocus.length; i++) {
-                darkGroup.push(false)
+                darkGroup.push(false);
             }
         }
         my.darkGroup = darkGroup
@@ -182,7 +188,7 @@ FOCUS.prototype = {
                         if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
                             var focusRight = my.M[flag].left + my.M[flag].width
                             var focusLeft = my.M[flag].left
-                            var focusTop = my.M[flag].top - my.M[flag].height * 0.5
+                            var focusTop = my.M[flag].top + my.M[flag].height * 0.5
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottomTop = my.M[i].top + my.M[i].height
                             if (my.M[i].left  < focusRight && nextRight > focusLeft && my.M[i].top >= focusTop) {
@@ -487,7 +493,7 @@ FOCUS.prototype = {
         }
     },
     getFocus: function() {
-      return this.focusId
+        return this.focusId
     },
     getFocusDom: function() {
         return this.getDom(this.focusId)

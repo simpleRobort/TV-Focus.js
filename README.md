@@ -379,6 +379,8 @@ var vm = new FOCUS({ })
 |stopFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点无法被获取焦点  |
 |openFocus|1| 数组：内容为一个或多个dom索引 | 使数组内的焦点从stopFocus内移除，能够获取焦点  |
 |refresh|0| 无 | 调用后库会丢弃原来的焦点集合，重新去抓取页面上的焦点  |
+|getDarkIndex|1| darkFocus索引 | 调用后会返回对应darkFocus组中当前的暗焦点索引  |
+
 
 ## V 版本日志
 
