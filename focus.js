@@ -7,6 +7,7 @@ function FOCUS(model) {
     my.darkClass = !model.darkClass ? "active" : model.darkClass
     my.darkFocus = !model.darkFocus ? [] : model.darkFocus
     my.unFocusArr = !model.unFocusArr ? [] : model.unFocusArr
+    my.appendEvent = []
     my.created = !model.created ? function (next) {
         next()
     } : model.created
@@ -51,6 +52,17 @@ FOCUS.prototype = {
             my.Mpush(my.getDom(i), i, my.model.forceMove, my.model.pageState, my.darkFocus);
             i++
         }
+    },
+    appendActionEvent: function (countArr, fn, stopPropagation) {
+        if (typeof countArr !== 'object') {
+            return console.log('指定区间的数组不能为空')
+        }
+        my.appendEvent.push({
+            countArr: countArr,
+            actionFn: fn ? fn : function () {},
+            stopPropagation: stopPropagation ? true : false
+        })
+        
     },
     initDarkGroup: function (model) {
         var darkGroup = !model.darkGroup ? [] : model.darkGroup
@@ -227,6 +239,14 @@ FOCUS.prototype = {
         }
 
     },
+    checkAppendAction: function (action, focusId) {
+        for (var i = 0; i < my.appendEvent.length; i++) {
+            if (focusId >= my.appendEvent[i].countArr[0] && focusId <= my.appendEvent[i].countArr[1]) {
+                my.appendEvent[i].actionFn(action,focusId)
+                return my.appendEvent[i].stopPropagation
+            }
+        }
+    },
     initKeyEvent: function () {
         var KEY_BACK = 8,
             KEY_OUT = 27,
@@ -271,6 +291,10 @@ FOCUS.prototype = {
                 case KEY_7:
                 case KEY_8:
                 case KEY_9:
+                    var flag = my.checkAppendAction('number', my.focusId)
+                    if (flag) {
+                        break
+                    }
                     my.keyNumberEvent(e.keyCode - 48, my.focusId)
                     break
                 case 1: /*ipannel*/
@@ -290,12 +314,20 @@ FOCUS.prototype = {
                     my.keyRightEvent()
                     break
                 case KEY_OK:
+                    var flag = my.checkAppendAction('ok', my.focusId)
+                    if (flag) {
+                        break
+                    }
                     my.keyOkEvent(my.focusId)
                     break
                 case 32: /*空格键*/
                 case 640: //四川有线 同洲
                 case KEY_OUT:
                 case KEY_BACK:
+                    var flag = my.checkAppendAction('back', my.focusId)
+                    if (flag) {
+                        break
+                    }
                     my.keyBackEvent(my.focusId)
                     break
                 case KEY_IPTV_PORTAL:
