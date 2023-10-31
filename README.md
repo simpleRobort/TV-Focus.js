@@ -325,6 +325,74 @@ tv最多的就是多级栏目的需求，在焦点切换时，对应的子列表
 ```
 ##### [demo地址](https://simplerobort.github.io/TV-Focus.js/demo/demo8.html)
 
+#### 8.异步添加 (appendActionEvent)
+简单的实现一个异步添加dom的正确使用方式
+
+使用方式:
+
+```javascript
+    var box = document.getElementById("box"); // 异步添加dom的容器
+    var btn = document.getElementById("btn"); // 点击按钮开始异步添加
+    var itemCount = 2; // 初始化页面有两个焦点，所以count从2开始
+
+    var focus = new FOCUS({
+      event: {
+        keyOkEvent: function (id) {
+          alert("点击了初始添加的焦点，id为" + id);
+        },
+      },
+    });
+
+    btn.onclick = function () {
+      setTimeout(function () {
+        // 模拟数据
+        var arr = [
+          { id: 400, txt: "焦点2 异步添加" },
+          { id: 401, txt: "焦点3 异步添加" },
+          { id: 402, txt: "焦点4 异步添加" },
+        ];
+        // 纪录当前添加焦点的起始索引
+        let startCount = itemCount;
+        let str = "";
+
+        // 拼装dom
+        for (var i = 0; i < arr.length; i++) {
+          str += `<div id="item${itemCount}">${arr[i].txt}</div>`;
+          itemCount++;
+        }
+
+        // 渲染dom
+        box.innerHTML += str;
+
+        //调用refresh函数重新抓取焦点
+        focus.refresh();
+
+        // 为添加的焦点区间添加事件
+        focus.appendActionEvent(
+          // 第一个参数代表需要为这次添加的焦点匹配新确认事件的区间
+          // 例： [2，5],焦点2到焦点5之间的焦点的点击会触发新事件(包括焦点2和5)
+          [startCount, itemCount - 1], 
+          // 新事件函数，action参数为事件类型，目前支持的类型如下
+          // ok：点击确认键/回车键
+          // back： 点击返回键/空格键
+          // number： 点击数字按键
+          // focusId：为当前的焦点id，当action是number时，第三个参数number代表点击的数字
+          function (action, focusId, number) {
+            alert("异步焦点触发事件，时间名称为" + action + ",id为" + focusId);
+          },
+          // 该参数代表触发新事件后是否还需要触发默认事件，支持boolean或者数组
+          // 例：true代表该区间的三个action事件不会触发初始化focus的事件函数
+          // 例： ['back','ok']代表点击返回或者确认键时，
+          // 触发完新事件后不会触发默认的keyOkEvent活着keyBackEvent，
+          // 但是点击数字键时依旧会触发新事件和默认事件
+          ['back']
+        );
+      }, 500);
+    };
+```
+##### [demo地址](https://simplerobort.github.io/TV-Focus.js/demo/demo9.html)
+
+
 |   周期名称  | 传参 | 描述 |
 |:----:|:----:|:----:|
 |created| next |提供一个next方法，在调用后库才会继续抓取页面的焦点并且初始化,此时能访问methods里的方法 |
@@ -372,7 +440,7 @@ var vm = new FOCUS({ })
 |   Api名称  | 传参数量 |传参 | 描述 |
 |:----:|:----:|:----:|:----:|
 |requireFocus|1| number | 使元素获取焦点，传参为索引值,例(使id为"item2"的元素获取焦点)：this.requireFocus(2)|
-|appendActionEvent|3| 区间数组:[1,2] 调用函数:function(action,当前焦点id) {}  是否调用默认的事件:stopPropagation | 区间数组为完全匹配，例如[1,2]，当前焦点在1和2之间(包括1和2)时会调用第二个传参函数|
+|appendActionEvent|3| 区间数组:[1,2] 调用函数:function(action,当前焦点id) {}  是否阻止默认的事件:stopPropagation | 区间数组为完全匹配，例如[1,2]，当前焦点在1和2之间时会调用第二个传参函数(包括1和2)<br>stopPropagation为boolean或者数组，代表是否阻止指定事件或者所有事件，目前只提供三个可拦截的事件(number: 数字按键、ok：回车键/确认键、back：返回键/空格键) 详情可见 II.8|
 |log| 4(后三个参数可不传)|打印内容，字体大小(默认16px), 文字颜色(默认白色)，背景颜色(默认黑色) | tv端无控制台，所以需要此api显示打印信息  |
 |getDom| 1|int | 根据传参索引返回元素  |
 |getFocus|0| 无 | 返回当前焦点索引  |
@@ -389,6 +457,7 @@ var vm = new FOCUS({ })
 
 |   版本号  | 更新内容 | 日期|
 |:----:|:----:|:----:|
+|1.0.9|添加异步使用详细说明|2023-10-31|
 |1.0.8|异步添加提供简便函数调用方法appendActionEvent|2023-10-4|
 |1.0.7|修复下移时有时会出现的意外焦点bug，md文档添加getDarkIndex|2023-3-1|
 |1.0.6|提供一个初始化的生命周期，为了适配页面初始化时要添加dom的需求|2022-5-19|

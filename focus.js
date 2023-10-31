@@ -2,7 +2,7 @@ function FOCUS(model) {
     window.my = this
     window.model = model;
     my.domIdName = !model.domIdName ? "item" : model.domIdName
-    my.focusId = !model.focusId ? "0" : model.focusId.replace(my.domIdName,"")
+    my.focusId = !model.focusId ? "0" : model.focusId.replace(my.domIdName, "")
     my.focusClass = !model.focusClass ? "focus" : model.focusClass
     my.darkClass = !model.darkClass ? "active" : model.darkClass
     my.darkFocus = !model.darkFocus ? [] : model.darkFocus
@@ -16,7 +16,7 @@ function FOCUS(model) {
 }
 
 FOCUS.prototype = {
-    init: function() {
+    init: function () {
         this.initDarkFocusArray(my.darkFocus)
         this.initDarkGroup(model)
         this.initModelDoms(model)
@@ -59,10 +59,10 @@ FOCUS.prototype = {
         }
         my.appendEvent.push({
             countArr: countArr,
-            actionFn: fn ? fn : function () {},
-            stopPropagation: stopPropagation ? true : false
+            actionFn: fn ? fn : function () { },
+            stopPropagation: stopPropagation ? typeof stopPropagation === 'object' && stopPropagation.length ? stopPropagation : true : false
         })
-        
+
     },
     initDarkGroup: function (model) {
         var darkGroup = !model.darkGroup ? [] : model.darkGroup
@@ -90,42 +90,42 @@ FOCUS.prototype = {
     },
     initEvent: function (model) {
         if (!model.event) model.event = {}
-        my.keyNumberEvent = !model.event.keyNumberEvent ? function () {}: model.event.keyNumberEvent
-        my.keyPortalEvent = !model.event.keyPortalEvent ? function () {}: model.event.keyPortalEvent
-        my.keyMenuEvent = !model.event.keyMenuEvent ? function () {}: model.event.keyMenuEvent
-        my.keyPageUpEvent = !model.event.keyPageUpEvent ? function () {}: model.event.keyPageUpEvent
-        my.keyPageDownEvent = !model.event.keyPageDownEvent ? function () {}: model.event.keyPageDownEvent
-        my.keyDelEvent = !model.event.keyDelEvent ? function () {}: model.event.keyDelEvent
-        my.keyVolUpEvent = !model.event.keyVolUpEvent ? function () {}: model.event.keyVolUpEvent
-        my.keyVolDownEvent = !model.event.keyVolDownEvent ? function () {}: model.event.keyVolDownEvent
-        my.keyMuteEvent = !model.event.keyMuteEvent ? function () {}: model.event.keyMuteEvent
-        my.keyPausePlayEvent = !model.event.keyPausePlayEvent ? function () {}: model.event.keyPausePlayEvent
-        my.keyMediaErrorEvent = !model.event.keyMediaErrorEvent ? function () {}: model.event.keyMediaErrorEvent
-        my.keyMediaEndEvent = !model.event.keyMediaEndEvent ? function () {}: model.event.keyMediaEndEvent
-        my.keyPlayModeChange = !model.event.keyPlayModeChange ? function () {}: model.event.keyPlayModeChange
-        my.keyMediaBeginEvent = !model.event.keyMediaBeginEvent ? function () {}: model.event.keyMediaBeginEvent
-        my.keyDefaultEvent = !model.event.keyDefaultEvent ? function () {}: model.event.keyDefaultEvent
-        my.keyBackEvent = !model.event.keyBackEvent ? function () {}: model.event.keyBackEvent
-        my.keyOkEvent = !model.event.keyOkEvent ? function () {}: model.event.keyOkEvent
-        my.focusEvent = !model.event.focusEvent ? function () {}: model.event.focusEvent
-        my.unfocusEvent = !model.event.unfocusEvent ? function () {}: model.event.unfocusEvent
-        my.darkFocusEvent = !model.event.darkFocusEvent ? function () {}: model.event.darkFocusEvent
-        my.undarkFocusEvent = !model.event.undarkFocusEvent ? function () {}: model.event.undarkFocusEvent
-        my.changeIndexBeforeFind = !model.event.changeIndexBeforeFind ? function () {}: model.event.changeIndexBeforeFind
-        my.changeIndexAfterFind = !model.event.changeIndexAfterFind ? function () {}: model.event.changeIndexAfterFind
+        my.keyNumberEvent = !model.event.keyNumberEvent ? function () { } : model.event.keyNumberEvent
+        my.keyPortalEvent = !model.event.keyPortalEvent ? function () { } : model.event.keyPortalEvent
+        my.keyMenuEvent = !model.event.keyMenuEvent ? function () { } : model.event.keyMenuEvent
+        my.keyPageUpEvent = !model.event.keyPageUpEvent ? function () { } : model.event.keyPageUpEvent
+        my.keyPageDownEvent = !model.event.keyPageDownEvent ? function () { } : model.event.keyPageDownEvent
+        my.keyDelEvent = !model.event.keyDelEvent ? function () { } : model.event.keyDelEvent
+        my.keyVolUpEvent = !model.event.keyVolUpEvent ? function () { } : model.event.keyVolUpEvent
+        my.keyVolDownEvent = !model.event.keyVolDownEvent ? function () { } : model.event.keyVolDownEvent
+        my.keyMuteEvent = !model.event.keyMuteEvent ? function () { } : model.event.keyMuteEvent
+        my.keyPausePlayEvent = !model.event.keyPausePlayEvent ? function () { } : model.event.keyPausePlayEvent
+        my.keyMediaErrorEvent = !model.event.keyMediaErrorEvent ? function () { } : model.event.keyMediaErrorEvent
+        my.keyMediaEndEvent = !model.event.keyMediaEndEvent ? function () { } : model.event.keyMediaEndEvent
+        my.keyPlayModeChange = !model.event.keyPlayModeChange ? function () { } : model.event.keyPlayModeChange
+        my.keyMediaBeginEvent = !model.event.keyMediaBeginEvent ? function () { } : model.event.keyMediaBeginEvent
+        my.keyDefaultEvent = !model.event.keyDefaultEvent ? function () { } : model.event.keyDefaultEvent
+        my.keyBackEvent = !model.event.keyBackEvent ? function () { } : model.event.keyBackEvent
+        my.keyOkEvent = !model.event.keyOkEvent ? function () { } : model.event.keyOkEvent
+        my.focusEvent = !model.event.focusEvent ? function () { } : model.event.focusEvent
+        my.unfocusEvent = !model.event.unfocusEvent ? function () { } : model.event.unfocusEvent
+        my.darkFocusEvent = !model.event.darkFocusEvent ? function () { } : model.event.darkFocusEvent
+        my.undarkFocusEvent = !model.event.undarkFocusEvent ? function () { } : model.event.undarkFocusEvent
+        my.changeIndexBeforeFind = !model.event.changeIndexBeforeFind ? function () { } : model.event.changeIndexBeforeFind
+        my.changeIndexAfterFind = !model.event.changeIndexAfterFind ? function () { } : model.event.changeIndexAfterFind
         my.initMoveEvent(model)
     },
     initMoveEvent: function (model) {
         function dirEvent(dir) {
             return function () {
                 var next
-                var handleByUser = this.changeIndexBeforeFind(dir,my.focusId)
+                var handleByUser = this.changeIndexBeforeFind(dir, my.focusId)
                 if (!handleByUser && handleByUser != 0) {
                     next = my.findNextDom(dir)
-                    while (this.checkStopFocus(next,this.unFocusArr)) {
-                        next = my.findNextDom(dir,next)
+                    while (this.checkStopFocus(next, this.unFocusArr)) {
+                        next = my.findNextDom(dir, next)
                     }
-                    var changeIndexAfterFind = this.changeIndexAfterFind(dir,my.focusId,next)
+                    var changeIndexAfterFind = this.changeIndexAfterFind(dir, my.focusId, next)
                     if (changeIndexAfterFind != undefined) next = changeIndexAfterFind
                     if (next == -1) return
                     if (my.M[next].darkState != -1 && my.M[next].darkState != my.M[my.focusId].darkState) {
@@ -146,7 +146,7 @@ FOCUS.prototype = {
         my.keyRightEvent = dirEvent(3)
         my.initKeyEvent()
     },
-    findNextDom: function (dir,index) {
+    findNextDom: function (dir, index) {
         var next = -1
         var flag = !index ? index == 0 ? 0 : my.focusId : index
         var sheep = {
@@ -159,14 +159,14 @@ FOCUS.prototype = {
         if (my.M[flag].forceMove[dir] == -1) {
             switch (dir) {
                 case 0:
-                    for (var i = 0 ; i < my.M.length; i++) {
+                    for (var i = 0; i < my.M.length; i++) {
                         if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
                             var focusRight = my.M[flag].left + my.M[flag].width
                             var focusLeft = my.M[flag].left
                             var focusTop = my.M[flag].top + my.M[flag].height * 0.5
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottomTop = my.M[i].top + my.M[i].height
-                            if (my.M[i].left  < focusRight && nextRight > focusLeft && nextBottomTop <= focusTop) {
+                            if (my.M[i].left < focusRight && nextRight > focusLeft && nextBottomTop <= focusTop) {
                                 // 循环的left小于焦点右侧left并且循环的右侧left大于焦点的left并且循环底部top小于焦点的top
                                 if ((my.M[flag].top - nextBottomTop) < sheep.topSize) {
                                     // 距离焦点的top比上一个还小时，就代表这次循环是目前最适合的焦点
@@ -178,17 +178,17 @@ FOCUS.prototype = {
                     }
                     break
                 case 1:
-                    for (var i = 0 ; i < my.M.length; i++) {
+                    for (var i = 0; i < my.M.length; i++) {
                         if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottom = my.M[i].top + my.M[i].height
                             var focusBottomTop = my.M[flag].top + my.M[flag].height
                             var focusLeft = my.M[flag].left + my.M[flag].width * 0.5
-                            if (nextBottom  > my.M[flag].top && my.M[i].top < focusBottomTop && nextRight <= focusLeft) {
+                            if (nextBottom > my.M[flag].top && my.M[i].top < focusBottomTop && nextRight <= focusLeft) {
                                 // 循环的顶部小于焦点底部的top并且循环的底部大于焦点的top并且循环右侧left小于焦点的left
                                 if ((my.M[flag].left - nextRight) < sheep.leftSize) {
                                     // 距离焦点的left比上一下还小时，就代表这次循环是目前最适合的焦点
-                                    sheep.leftSize = my.M[flag].left  - nextRight
+                                    sheep.leftSize = my.M[flag].left - nextRight
                                     next = i
                                 }
                             }
@@ -196,14 +196,14 @@ FOCUS.prototype = {
                     }
                     break
                 case 2:
-                    for (var i = 0 ; i < my.M.length; i++) {
+                    for (var i = 0; i < my.M.length; i++) {
                         if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
                             var focusRight = my.M[flag].left + my.M[flag].width
                             var focusLeft = my.M[flag].left
                             var focusTop = my.M[flag].top + my.M[flag].height * 0.5
                             var nextRight = my.M[i].left + my.M[i].width
                             var nextBottomTop = my.M[i].top + my.M[i].height
-                            if (my.M[i].left  < focusRight && nextRight > focusLeft && my.M[i].top >= focusTop) {
+                            if (my.M[i].left < focusRight && nextRight > focusLeft && my.M[i].top >= focusTop) {
                                 // 循环的left小于焦点右侧left并且循环的右侧left大于焦点的left并且循环top大于焦点底部的top
                                 if ((my.M[i].top - focusTop) <= sheep.topSize) {
                                     // 距离焦点的top比上一个还小时，就代表这次循环是目前最适合的焦点
@@ -215,12 +215,12 @@ FOCUS.prototype = {
                     }
                     break
                 case 3:
-                    for (var i = 0 ; i < my.M.length; i++) {
+                    for (var i = 0; i < my.M.length; i++) {
                         if (i != flag && my.M[flag].pageState == my.M[i].pageState) {
-                            var focusRight = my.M[flag].left + my.M[flag].width*0.5
-                            var nextBottom= my.M[i].top + my.M[i].height
+                            var focusRight = my.M[flag].left + my.M[flag].width * 0.5
+                            var nextBottom = my.M[i].top + my.M[i].height
                             var focusBottomTop = my.M[flag].top + my.M[flag].height
-                            if (nextBottom  > my.M[flag].top && my.M[i].top < focusBottomTop && my.M[i].left >= focusRight) {
+                            if (nextBottom > my.M[flag].top && my.M[i].top < focusBottomTop && my.M[i].left >= focusRight) {
                                 // 循环的顶部小于焦点底部的top并且循环的底部大于焦点的top并且循环left大于焦点的右侧left
                                 if ((my.M[i].left - focusRight) < sheep.leftSize) {
                                     // 距离焦点的left比上一下还小时，就代表这次循环是目前最适合的焦点
@@ -234,16 +234,16 @@ FOCUS.prototype = {
             }
             return next
         } else {
-            next = my.M[flag].forceMove[dir].replace(my.domIdName,'')
+            next = my.M[flag].forceMove[dir].replace(my.domIdName, '')
             return next
         }
 
     },
-    checkAppendAction: function (action, focusId) {
+    checkAppendAction: function (action, focusId, number) {
         for (var i = 0; i < my.appendEvent.length; i++) {
             if (focusId >= my.appendEvent[i].countArr[0] && focusId <= my.appendEvent[i].countArr[1]) {
-                my.appendEvent[i].actionFn(action,focusId)
-                return my.appendEvent[i].stopPropagation
+                my.appendEvent[i].actionFn(action, focusId, number)
+                return typeof my.appendEvent[i].stopPropagation === 'object' ? my.appendEvent[i].stopPropagation.indexOf(action) !== -1 : my.appendEvent[i].stopPropagation
             }
         }
     },
@@ -291,7 +291,7 @@ FOCUS.prototype = {
                 case KEY_7:
                 case KEY_8:
                 case KEY_9:
-                    var flag = my.checkAppendAction('number', my.focusId)
+                    var flag = my.checkAppendAction('number', my.focusId, e.keyCode - 48)
                     if (flag) {
                         break
                     }
@@ -393,7 +393,7 @@ FOCUS.prototype = {
     },
     Mpush: function (dom, i, forceMove, pageState, darkFocus) {
         if (!my.M) my.M = []
-        var darkState = this.getDarkState(i,darkFocus)
+        var darkState = this.getDarkState(i, darkFocus)
         my.M.push({
             index: i,
             id: my.domIdName + i,
@@ -401,14 +401,14 @@ FOCUS.prototype = {
             left: this.getElementLeft(dom),
             width: dom.offsetWidth,
             height: dom.offsetHeight,
-            forceMove: !forceMove[my.domIdName + i] ? [-1,-1,-1,-1] : forceMove[my.domIdName + i],
+            forceMove: !forceMove[my.domIdName + i] ? [-1, -1, -1, -1] : forceMove[my.domIdName + i],
             pageState: !pageState[my.domIdName + i] ? 1 : pageState[my.domIdName + i],
             darkState: darkState
         })
     },
-    getDarkState: function (index,darkFocus) {
-        for (var i = 0;i < darkFocus.length; i++) {
-            for (var y = 0;y < darkFocus[i].length; y++) {
+    getDarkState: function (index, darkFocus) {
+        for (var i = 0; i < darkFocus.length; i++) {
+            for (var y = 0; y < darkFocus[i].length; y++) {
                 if (index == darkFocus[i][y]) {
                     return i
                 }
@@ -419,42 +419,42 @@ FOCUS.prototype = {
     getDarkIndex: function (index) {
         return this.D[index]
     },
-    getElementTop: function(elem){
+    getElementTop: function (elem) {
 
-        var elemTop=elem.offsetTop;//获得elem元素距相对定位的父元素的top
+        var elemTop = elem.offsetTop;//获得elem元素距相对定位的父元素的top
 
-        elem=elem.offsetParent;//将elem换成起相对定位的父元素
+        elem = elem.offsetParent;//将elem换成起相对定位的父元素
 
-        while(elem!=null){//只要还有相对定位的父元素
+        while (elem != null) {//只要还有相对定位的父元素
 
             //获得父元素 距他父元素的top值,累加到结果中
 
-            elemTop+=elem.offsetTop;
+            elemTop += elem.offsetTop;
 
             //再次将elem换成他相对定位的父元素上;
 
-            elem=elem.offsetParent;
+            elem = elem.offsetParent;
 
         }
 
         return elemTop;
 
     },
-    getElementLeft: function(elem){
+    getElementLeft: function (elem) {
 
-        var elemLeft=elem.offsetLeft;//获得elem元素距相对定位的父元素的top
+        var elemLeft = elem.offsetLeft;//获得elem元素距相对定位的父元素的top
 
-        elem=elem.offsetParent;//将elem换成起相对定位的父元素
+        elem = elem.offsetParent;//将elem换成起相对定位的父元素
 
-        while(elem!=null){//只要还有相对定位的父元素
+        while (elem != null) {//只要还有相对定位的父元素
 
             //获得父元素 距他父元素的top值,累加到结果中
 
-            elemLeft+=elem.offsetLeft;
+            elemLeft += elem.offsetLeft;
 
             //再次将elem换成他相对定位的父元素上;
 
-            elem=elem.offsetParent;
+            elem = elem.offsetParent;
 
         }
 
@@ -472,23 +472,23 @@ FOCUS.prototype = {
 
     },
     stopFocus: function (iArr) {
-        for (var j = 0;j < iArr.length;j++) {
-            for (var i = 0;i < this.unFocusArr.length;i++) {
+        for (var j = 0; j < iArr.length; j++) {
+            for (var i = 0; i < this.unFocusArr.length; i++) {
                 if (this.unFocusArr[i] == iArr[j]) return
             }
             this.unFocusArr.push(iArr[j])
         }
     },
-    checkStopFocus: function (index,arr) {
-        for (var i = 0;i < arr.length;i++) {
+    checkStopFocus: function (index, arr) {
+        for (var i = 0; i < arr.length; i++) {
             if (arr[i] == index) return true
         }
         return false
     },
     openFocus: function (iArr) {
-        for (var j = 0;j < iArr.length;j++) {
-            for (var i = 0;i < this.unFocusArr.length;i++) {
-                if (this.unFocusArr[i] == iArr[j]) this.unFocusArr.splice(i,1)
+        for (var j = 0; j < iArr.length; j++) {
+            for (var i = 0; i < this.unFocusArr.length; i++) {
+                if (this.unFocusArr[i] == iArr[j]) this.unFocusArr.splice(i, 1)
             }
         }
     },
@@ -524,10 +524,10 @@ FOCUS.prototype = {
             my.focusEvent(my.focusId)
         }
     },
-    getFocus: function() {
+    getFocus: function () {
         return this.focusId
     },
-    getFocusDom: function() {
+    getFocusDom: function () {
         return this.getDom(this.focusId)
     },
     log: function (msg, fontSize, TextColor, bgColor) {
@@ -594,12 +594,12 @@ FOCUS.prototype = {
     },
     getParam: function (param, defaults, url, isblur) {
         url = url || window.location.href
-        defaults = !defaults ? defaults == 0 ? 0: null: defaults
+        defaults = !defaults ? defaults == 0 ? 0 : null : defaults
         var params = (url.substr(url.indexOf("?") + 1)).split("&");
         isblur = isblur || false;
 
         if (params != null) {
-            if ( isblur ){
+            if (isblur) {
                 var param = param.toLowerCase();
                 for (var i = 0; i < params.length; i++) {
                     var strs = params[i].split("=");

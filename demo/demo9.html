@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .focus {
+        border: 1px black solid;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="item0">初始焦点0</div>
+    <div id="item1">初始焦点1</div>
+    <div id="box"></div>
+    <button id="btn">点击异步添加Dom</button>
+  </body>
+  <script src="../focus.js"></script>
+  <script>
+    var box = document.getElementById("box");
+    var btn = document.getElementById("btn");
+    var itemCount = 2; // 初始化页面有两个焦点，所以count从2开始
+
+    var focus = new FOCUS({
+      event: {
+        keyOkEvent: function (id) {
+          alert("点击了初始添加的焦点，id为" + id);
+        },
+        keyBackEvent: function (id) {
+          alert("点击返回：初始添加的焦点，id为" + id);
+        },
+      },
+    });
+
+    btn.onclick = function () {
+      setTimeout(function () {
+        // 模拟数据
+        var arr = [
+          { id: 400, txt: "焦点2 异步添加" },
+          { id: 401, txt: "焦点3 异步添加" },
+          { id: 402, txt: "焦点4 异步添加" },
+        ];
+        // 纪录当前添加焦点的起始索引
+        let startCount = itemCount;
+        let str = "";
+
+        // 拼装dom
+        for (var i = 0; i < arr.length; i++) {
+          str += `<div id="item${itemCount}">${arr[i].txt}</div>`;
+          itemCount++;
+        }
+
+        // 渲染dom
+        box.innerHTML += str;
+
+        //调用refresh函数重新抓取焦点
+        focus.refresh();
+
+        // 为添加的焦点区间添加事件
+        focus.appendActionEvent(
+          [startCount, itemCount - 1],
+          function (action, focusId) {
+            alert("异步焦点触发事件，时间名称为" + action + ",id为" + focusId);
+          },
+          ['back']
+        );
+      }, 500);
+    };
+  </script>
+</html>
